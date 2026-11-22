@@ -165,7 +165,10 @@ export function useDapEngine() {
     }
 
     workerRef.current = worker
-    const baseUrl = new URL('./', window.location.href).href
+    const basePath = import.meta.env.BASE_URL.endsWith('/')
+      ? import.meta.env.BASE_URL
+      : `${import.meta.env.BASE_URL}/`
+    const baseUrl = new URL(basePath, window.location.origin).href
     worker.postMessage({ type: 'init', baseUrl } satisfies WorkerInboundMessage)
   }, [appendConsole, trackVariableDiffs])
 

@@ -14,8 +14,16 @@ const {
 } = Astro.props
 
 const siteUrl = Astro.site ?? new URL('https://dap-web.pages.dev')
-const canonicalUrl = new URL(canonicalPath, siteUrl).toString()
-const ogImageUrl = new URL('/og-image.png', siteUrl).toString()
+const basePath = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`
+const normalizedCanonicalPath = canonicalPath.startsWith('/')
+  ? `${basePath}${canonicalPath.slice(1)}`
+  : `${basePath}${canonicalPath}`
+const canonicalUrl = new URL(normalizedCanonicalPath, siteUrl).toString()
+const ogImageUrl = new URL(`${basePath}og-image.png`, siteUrl).toString()
+const faviconHref = `${basePath}favicon.svg`
+const manifestHref = `${basePath}site.webmanifest`
 
 const keywords = [
   'DAP pseudocode',
@@ -141,8 +149,8 @@ const faqSchema = {
     <link rel="alternate" hreflang="x-default" href={canonicalUrl} />
 
     <!-- Icons & PWA Manifest -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href={faviconHref} />
+    <link rel="manifest" href={manifestHref} />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Trash2, ChevronDown, ChevronRight, Keyboard, CornerDownLeft } from 'lucide-react'
+import { Trash2, ChevronDown, ChevronRight, CornerDownLeft } from 'lucide-react'
 import type { TranslationDict } from '../i18n'
 import type { ConsoleEntry, ExecutionMetrics } from '../hooks/useDapEngine'
 
@@ -32,12 +32,11 @@ export function ConsolePanel({
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
-    outputEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    outputEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
   }, [entries, inputMode])
 
   useEffect(() => {
     if (inputMode) {
-      // Defer focus slightly to ensure DOM input is mounted after tab switch
       const id = window.setTimeout(() => inputRef.current?.focus(), 20)
       return () => window.clearTimeout(id)
     }
@@ -79,7 +78,6 @@ export function ConsolePanel({
   }
 
   const handleTerminalClick = () => {
-    // Only focus if user isn't dragging to select text
     const sel = window.getSelection()?.toString()
     if (!sel && inputMode) {
       inputRef.current?.focus()
@@ -87,19 +85,19 @@ export function ConsolePanel({
   }
 
   return (
-    <div className="flex h-full flex-col">
-      {/* Header bar */}
-      <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-3 py-1.5 text-xs dark:border-slate-800 dark:bg-slate-900/70">
+    <div className="flex h-full min-h-0 flex-col">
+      {/* Sub-header */}
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#E3E8EE] bg-[#F6F9FC] px-3 py-1.5 text-xs dark:border-white/10 dark:bg-[#0A2540]">
         <div className="flex items-center gap-2">
-          <span className="font-semibold text-slate-700 dark:text-slate-300">{t.consoleOutput}</span>
+          <span className="font-medium text-[#0A2540] dark:text-white">{t.consoleOutput}</span>
           {inputMode && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-cyan-500/15 px-2 py-0.5 text-[11px] font-medium text-cyan-700 dark:text-cyan-300">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-cyan-400" />
+            <span className="inline-flex items-center gap-1.5 font-mono text-[11px] text-[#635BFF] dark:text-[#80E9FF]">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#635BFF] dark:bg-[#80E9FF]" />
               {t.stdinInteractivePrompt} ({inputMode === 'line' ? t.stdinLineMode : t.stdinTokenMode})
             </span>
           )}
           {!inputMode && metrics && (
-            <span className="rounded bg-emerald-500/10 px-2 py-0.5 font-mono text-[11px] text-emerald-700 dark:text-emerald-400">
+            <span className="font-mono text-[11px] tabular-nums text-[#697386] dark:text-[#7C93AB]">
               {t.metricsSummary(metrics.durationMs, metrics.stepCount)}
             </span>
           )}
@@ -108,19 +106,18 @@ export function ConsolePanel({
           <button
             type="button"
             onClick={() => setShowPreFill((v) => !v)}
-            className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] font-medium text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800"
+            className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] font-medium text-[#425466] hover:bg-[#E3E8EE]/60 dark:text-[#ADBDCC] dark:hover:bg-white/10"
           >
             {showPreFill ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
-            <Keyboard className="h-3 w-3" />
             {t.stdinPreFill}
             {stdinPreFill.trim().length > 0 && (
-              <span className="ml-0.5 h-1.5 w-1.5 rounded-full bg-indigo-500" />
+              <span className="ml-0.5 h-1.5 w-1.5 rounded-full bg-[#635BFF]" />
             )}
           </button>
           <button
             type="button"
             onClick={onClear}
-            className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] text-slate-500 hover:bg-slate-200 hover:text-slate-800 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200"
+            className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] text-[#697386] hover:bg-[#E3E8EE]/60 hover:text-[#0A2540] dark:text-[#7C93AB] dark:hover:bg-white/10 dark:hover:text-white"
           >
             <Trash2 className="h-3 w-3" />
             {t.clearConsole}
@@ -130,26 +127,26 @@ export function ConsolePanel({
 
       {/* Optional pre-filled stdin drawer */}
       {showPreFill && (
-        <div className="border-b border-slate-200 bg-slate-100/70 p-2 dark:border-slate-800 dark:bg-slate-900/40">
+        <div className="border-b border-[#E3E8EE] bg-white p-2 dark:border-white/10 dark:bg-[#0A2540]">
           <textarea
             value={stdinPreFill}
             onChange={(e) => onStdinPreFillChange(e.target.value)}
             rows={3}
             placeholder={t.stdinPlaceholder}
-            className="w-full resize-y rounded border border-slate-300 bg-white p-2 font-mono text-xs text-slate-800 outline-none focus:border-indigo-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200"
+            className="w-full resize-y rounded border border-[#E3E8EE] bg-[#F6F9FC] p-2 font-mono text-xs text-[#0A2540] outline-none focus:border-[#635BFF] dark:border-white/15 dark:bg-[#06182C] dark:text-white"
           />
         </div>
       )}
 
-      {/* Interactive Terminal Body */}
+      {/* Stripe Shell Deep Navy Terminal Surface */}
       <div
         onClick={handleTerminalClick}
-        className={`flex-1 overflow-auto bg-slate-950 p-3 font-mono text-xs leading-relaxed text-slate-100 ${
+        className={`min-h-0 flex-1 overflow-auto bg-[#0A2540] p-3.5 font-mono text-[13px] leading-relaxed text-[#E6EDF3] dark:bg-[#06182C] ${
           inputMode ? 'cursor-text' : ''
         }`}
       >
         {entries.length === 0 && !inputMode ? (
-          <p className="text-slate-500">{t.consoleEmpty}</p>
+          <p className="text-xs text-[#7C93AB]">{t.consoleEmpty}</p>
         ) : (
           <div className="whitespace-pre-wrap break-words">
             {entries.map((entry) => (
@@ -157,12 +154,12 @@ export function ConsolePanel({
                 key={entry.id}
                 className={
                   entry.kind === 'error'
-                    ? 'block rounded bg-rose-500/10 px-2 py-1.5 text-rose-300'
+                    ? 'my-1 block rounded border border-[#DF1B41]/30 bg-[#DF1B41]/10 px-2.5 py-1.5 text-[#FF8DA1]'
                     : entry.kind === 'stdin'
-                      ? 'text-cyan-300'
+                      ? 'text-[#80E9FF]'
                       : entry.kind === 'info'
-                        ? 'text-slate-400'
-                        : 'text-slate-100'
+                        ? 'text-[#7C93AB]'
+                        : 'text-[#F6F9FC]'
                 }
               >
                 {entry.text}
@@ -171,10 +168,10 @@ export function ConsolePanel({
           </div>
         )}
 
-        {/* Inline live terminal input prompt right inside the terminal stream */}
+        {/* Inline live terminal prompt */}
         {inputMode && (
-          <form onSubmit={handleSubmit} className="mt-1 flex items-center gap-1.5">
-            <span className="select-none font-bold text-cyan-400">❯</span>
+          <form onSubmit={handleSubmit} className="mt-1.5 flex items-center gap-2">
+            <span className="select-none font-semibold text-[#80E9FF]">❯</span>
             <input
               ref={inputRef}
               type="text"
@@ -184,12 +181,12 @@ export function ConsolePanel({
               placeholder={t.stdinInputPlaceholder}
               autoComplete="off"
               spellCheck={false}
-              className="min-w-0 flex-1 bg-transparent font-mono text-xs text-cyan-200 caret-cyan-400 outline-none placeholder:text-slate-600"
+              className="min-w-0 flex-1 bg-transparent font-mono text-[13px] text-white caret-[#80E9FF] outline-none placeholder:text-[#7C93AB]/70"
             />
             <button
               type="submit"
               title={t.stdinSend}
-              className="inline-flex shrink-0 items-center gap-1 rounded border border-cyan-500/40 bg-cyan-500/15 px-2 py-0.5 text-[11px] font-medium text-cyan-300 transition hover:bg-cyan-500/25"
+              className="inline-flex shrink-0 items-center gap-1 rounded border border-white/15 bg-white/10 px-2 py-0.5 text-[11px] font-medium text-white transition hover:bg-white/20"
             >
               <CornerDownLeft className="h-3 w-3" />
               <span>Enter</span>

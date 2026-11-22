@@ -4,29 +4,178 @@ import '../index.css'
 interface Props {
   title?: string
   description?: string
+  canonicalPath?: string
 }
 
 const {
-  title = 'DAP Web IDE — Runner, Debugger & Analyzer',
-  description = 'Web IDE, Live Step-by-Step Debugger, and Static/Runtime Analyzer for DAP pseudocode powered by rafiathallah3/dap via Go WebAssembly.',
+  title = 'DAP Web — Runner, Live Debugger & Analyzer untuk Pseudocode DAP',
+  description = 'Jalankan, debug langkah demi langkah, dan analisis kode pseudocode DAP langsung di browser tanpa instalasi. Dilengkapi terminal interaktif, visualisasi Heap & Pointer (Linked List/Stack), Token, AST, dan Bytecode VM.',
+  canonicalPath = '/',
 } = Astro.props
+
+const siteUrl = Astro.site ?? new URL('https://dap-web.pages.dev')
+const canonicalUrl = new URL(canonicalPath, siteUrl).toString()
+const ogImageUrl = new URL('/og-image.png', siteUrl).toString()
+
+const keywords = [
+  'DAP pseudocode',
+  'DAP online',
+  'DAP web',
+  'compiler DAP online',
+  'interpreter DAP',
+  'pseudocode debugger online',
+  'belajar algoritma pseudocode',
+  'visualisasi linked list pointer',
+  'AST analyzer',
+  'bytecode VM visualizer',
+  'rafiathallah3/dap',
+  'mee-i/dap-web',
+].join(', ')
+
+const webAppSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'DAP Web',
+  alternateName: 'dap-web',
+  url: canonicalUrl,
+  description,
+  applicationCategory: 'DeveloperApplication',
+  educationalUse: 'Computer Science Education, Algorithms & Data Structures',
+  operatingSystem: 'Any (Web Browser)',
+  browserRequirements: 'Requires JavaScript and WebAssembly',
+  inLanguage: ['id', 'en'],
+  isAccessibleForFree: true,
+  softwareVersion: '1.0.2',
+  image: ogImageUrl,
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'IDR',
+  },
+  codeRepository: 'https://github.com/mee-i/dap-web',
+  isBasedOn: {
+    '@type': 'SoftwareSourceCode',
+    name: 'DAP (Pseudocode Language & Interpreter)',
+    codeRepository: 'https://github.com/rafiathallah3/dap',
+    url: 'https://rafiathallah3.github.io/dap/',
+  },
+  featureList: [
+    'Eksekusi skrip DAP langsung di browser dengan engine asli rafiathallah3/dap',
+    'Live Step-by-Step Debugger (Breakpoints, Step Over, Step Into, Step Out, Call Stack, Variables)',
+    'Visualisasi Memori Heap & Pointer untuk Singly/Doubly Linked List dan Stack',
+    'Terminal interaktif untuk read, input, masukan, dan inputBaris',
+    'Analisis Statis & Kompilasi: Tokens Inspector, Interactive AST Tree/JSON, dan Bytecode VM Disassembler',
+    'Editor CodeMirror 6 dengan syntax highlighting DAP, code suggestions/autocomplete, multi-tab file, dan auto-save localStorage',
+  ],
+}
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Apa itu DAP Web?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'DAP Web (dap-web) adalah editor, runner, live step-by-step debugger, dan analyzer berbasis web untuk bahasa pseudocode DAP yang memakai engine asli dari repositori rafiathallah3/dap sehingga 100% kompatibel dengan DAP CLI.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Apakah DAP Web perlu instalasi CLI atau Docker?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Tidak. Seluruh lexer, parser, interpreter, dan bytecode VM DAP berjalan langsung di dalam browser Anda secara aman dan instan tanpa perlu menginstal apa pun.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Apakah bisa melakukan debugging langkah demi langkah dan melihat pointer/heap?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Ya. Anda dapat memasang breakpoint di nomor baris, menjalankan Step Over/Into/Out pada setiap iterasi loop maupun pemanggilan procedure/function, memantau Call Stack dan nilai variabel, serta melihat alokasi sel memori Heap (allocate/deallocate) secara real-time.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Apakah kode yang saya tulis akan hilang jika browser ditutup?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Tidak. Semua tab file, nama file, isi kode, breakpoint, dan input tersimpan otomatis di localStorage browser sehingga tetap ada ketika halaman dibuka kembali.',
+      },
+    },
+  ],
+}
 ---
 
 <!doctype html>
-<html lang="id" class="dark">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={description} />
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
+    <meta name="author" content="mee-i/dap-web (powered by rafiathallah3/dap)" />
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a2540" media="(prefers-color-scheme: dark)" />
+
+    <!-- Prevent theme flash before React hydrates -->
+    <script is:inline>
+      try {
+        var t = localStorage.getItem('dap-web-theme')
+        if (t === 'dark') document.documentElement.classList.add('dark')
+        else document.documentElement.classList.remove('dark')
+      } catch (e) {}
+    </script>
+
+    <!-- Canonical & Language Alternates -->
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" hreflang="id" href={canonicalUrl} />
+    <link rel="alternate" hreflang="en" href={canonicalUrl} />
+    <link rel="alternate" hreflang="x-default" href={canonicalUrl} />
+
+    <!-- Icons & PWA Manifest -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="DAP Web" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="DAP Web — Runner, Live Debugger & Analyzer untuk Pseudocode DAP" />
+
+    <!-- Twitter / X Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <!-- Fonts: Plus Jakarta Sans + IBM Plex Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(webAppSchema)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   </head>
-  <body class="bg-slate-950 text-slate-100 antialiased">
+  <body class="bg-[#F6F9FC] text-[#0A2540] dark:bg-[#06182C] dark:text-white">
     <slot />
   </body>
 </html>

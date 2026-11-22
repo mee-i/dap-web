@@ -26,29 +26,25 @@ export function TokensView({ t, analysis, onJumpToPosition }: TokensViewProps) {
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
-      <div className="flex items-center justify-between gap-2 border-b border-slate-200 bg-slate-50 px-3 py-1.5 dark:border-slate-800 dark:bg-slate-900/70">
+      <div className="flex items-center justify-between gap-2 border-b border-[#E3E8EE] bg-[#F6F9FC] px-3 py-1.5 dark:border-white/10 dark:bg-[#06182C]">
         <div className="relative flex-1">
-          <Search className="pointer-events-none absolute top-1/2 left-2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+          <Search className="pointer-events-none absolute top-1/2 left-2 h-3.5 w-3.5 -translate-y-1/2 text-[#697386]" />
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t.tokensFilter}
-            className="h-7 w-full rounded border border-slate-300 bg-white pl-7 pr-2 text-xs text-slate-800 outline-none focus:border-indigo-500 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200"
+            className="h-7 w-full rounded border border-[#E3E8EE] bg-white pl-7 pr-2 text-xs text-[#0A2540] outline-none focus:border-[#635BFF] dark:border-white/15 dark:bg-[#0A2540] dark:text-white"
           />
         </div>
-        <span className="shrink-0 font-mono text-[11px] text-slate-500 dark:text-slate-400">
+        <span className="shrink-0 font-mono text-[11px] tabular-nums text-[#697386] dark:text-[#7C93AB]">
           {t.tokensCount(filtered.length, tokens.length)}
         </span>
       </div>
 
-      <div className="border-b border-slate-200 bg-slate-50/50 px-3 py-1 text-[11px] text-slate-500 dark:border-slate-800 dark:bg-slate-900/30 dark:text-slate-400">
-        {t.tokensHint}
-      </div>
-
       <div className="flex-1 overflow-auto">
-        <table className="w-full text-left font-mono text-xs">
-          <thead className="sticky top-0 border-b border-slate-200 bg-slate-100 text-[11px] uppercase text-slate-500 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400">
+        <table className="w-full text-left font-mono text-xs tabular-nums">
+          <thead className="sticky top-0 border-b border-[#E3E8EE] bg-[#F6F9FC] text-[10px] font-semibold uppercase tracking-wider text-[#697386] dark:border-white/10 dark:bg-[#06182C] dark:text-[#7C93AB]">
             <tr>
               <th className="w-12 px-3 py-1.5">{t.colIndex}</th>
               <th className="px-3 py-1.5">{t.colKind}</th>
@@ -56,23 +52,21 @@ export function TokensView({ t, analysis, onJumpToPosition }: TokensViewProps) {
               <th className="w-24 px-3 py-1.5 text-right">{t.colPosition}</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 dark:divide-slate-800/70">
+          <tbody className="divide-y divide-[#E3E8EE] dark:divide-white/10">
             {filtered.map((tk) => (
               <tr
                 key={tk.index}
                 onClick={() => onJumpToPosition(tk.line, tk.col)}
-                className="cursor-pointer transition hover:bg-indigo-500/10"
+                className="cursor-pointer transition hover:bg-[#635BFF]/6 dark:hover:bg-white/5"
               >
-                <td className="px-3 py-1 text-slate-400">{tk.index}</td>
-                <td className="px-3 py-1">
-                  <span className="rounded bg-indigo-500/15 px-1.5 py-0.5 text-[11px] font-semibold text-indigo-700 dark:text-indigo-300">
-                    {tk.kind}
-                  </span>
+                <td className="px-3 py-1.5 text-[#697386] dark:text-[#7C93AB]">{tk.index}</td>
+                <td className="px-3 py-1.5 font-semibold text-[#635BFF] dark:text-[#80E9FF]">
+                  {tk.kind}
                 </td>
-                <td className="max-w-[200px] truncate px-3 py-1 text-emerald-700 dark:text-emerald-300">
+                <td className="max-w-[200px] truncate px-3 py-1.5 text-[#0A2540] dark:text-white">
                   {tk.value === '\n' ? '\\n' : tk.value || '—'}
                 </td>
-                <td className="px-3 py-1 text-right text-slate-500 dark:text-slate-400">
+                <td className="px-3 py-1.5 text-right text-[#697386] dark:text-[#7C93AB]">
                   {tk.line}:{tk.col}
                 </td>
               </tr>
@@ -90,8 +84,8 @@ function AstTreeNode({ label, data, depth = 0 }: { label?: string; data: unknown
   if (data === null || data === undefined) {
     return (
       <div className="py-0.5 font-mono text-xs" style={{ paddingLeft: depth * 14 }}>
-        {label && <span className="text-slate-500 dark:text-slate-400">{label}: </span>}
-        <span className="text-slate-400">null</span>
+        {label && <span className="text-[#697386] dark:text-[#7C93AB]">{label}: </span>}
+        <span className="text-[#8792A2]">null</span>
       </div>
     )
   }
@@ -99,14 +93,14 @@ function AstTreeNode({ label, data, depth = 0 }: { label?: string; data: unknown
   if (typeof data !== 'object') {
     return (
       <div className="py-0.5 font-mono text-xs" style={{ paddingLeft: depth * 14 }}>
-        {label && <span className="text-slate-500 dark:text-slate-400">{label}: </span>}
+        {label && <span className="text-[#697386] dark:text-[#7C93AB]">{label}: </span>}
         <span
           className={
             typeof data === 'string'
-              ? 'text-lime-700 dark:text-lime-300'
+              ? 'text-[#0E6245] dark:text-[#3ECF8E]'
               : typeof data === 'boolean'
-                ? 'text-orange-600 dark:text-orange-400'
-                : 'text-amber-700 dark:text-amber-300'
+                ? 'text-[#B45309] dark:text-[#FFCB6B]'
+                : 'text-[#635BFF] dark:text-[#80E9FF]'
           }
         >
           {typeof data === 'string' ? `"${data}"` : String(data)}
@@ -121,14 +115,12 @@ function AstTreeNode({ label, data, depth = 0 }: { label?: string; data: unknown
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
-          className="flex items-center gap-1 py-0.5 font-mono text-xs text-slate-700 hover:text-indigo-500 dark:text-slate-300"
+          className="flex items-center gap-1 py-0.5 font-mono text-xs text-[#0A2540] hover:text-[#635BFF] dark:text-[#ADBDCC] dark:hover:text-[#80E9FF]"
           style={{ paddingLeft: depth * 14 }}
         >
           {open ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
-          {label && <span className="text-slate-500 dark:text-slate-400">{label}</span>}
-          <span className="rounded bg-slate-200 px-1 text-[10px] text-slate-600 dark:bg-slate-800 dark:text-slate-400">
-            [{data.length}]
-          </span>
+          {label && <span className="text-[#697386] dark:text-[#7C93AB]">{label}</span>}
+          <span className="text-[10px] text-[#697386]">[{data.length}]</span>
         </button>
         {open &&
           data.map((item, idx) => (
@@ -147,17 +139,15 @@ function AstTreeNode({ label, data, depth = 0 }: { label?: string; data: unknown
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-1 py-0.5 font-mono text-xs hover:text-indigo-500"
+        className="flex items-center gap-1 py-0.5 font-mono text-xs hover:text-[#635BFF] dark:hover:text-[#80E9FF]"
         style={{ paddingLeft: depth * 14 }}
       >
-        {open ? <ChevronDown className="h-3 w-3 text-slate-400" /> : <ChevronRight className="h-3 w-3 text-slate-400" />}
-        {label && <span className="text-slate-500 dark:text-slate-400">{label}:</span>}
+        {open ? <ChevronDown className="h-3 w-3 text-[#697386]" /> : <ChevronRight className="h-3 w-3 text-[#697386]" />}
+        {label && <span className="text-[#697386] dark:text-[#7C93AB]">{label}:</span>}
         {nodeType ? (
-          <span className="rounded bg-purple-500/15 px-1.5 py-0.5 text-[11px] font-semibold text-purple-700 dark:text-purple-300">
-            {nodeType}
-          </span>
+          <span className="font-semibold text-[#635BFF] dark:text-[#A9A4FF]">{nodeType}</span>
         ) : (
-          <span className="text-slate-400">{'{...}'}</span>
+          <span className="text-[#697386]">{'{...}'}</span>
         )}
       </button>
       {open &&
@@ -190,7 +180,7 @@ export function ASTView({ t, analysis }: ASTViewProps) {
 
   if (!analysis?.ok || !analysis.ast) {
     return (
-      <div className="flex h-full items-center justify-center p-6 text-center text-xs text-slate-500 dark:text-slate-400">
+      <div className="flex h-full items-center justify-center p-6 text-center text-xs text-[#697386] dark:text-[#7C93AB]">
         {t.astEmpty}
       </div>
     )
@@ -198,7 +188,7 @@ export function ASTView({ t, analysis }: ASTViewProps) {
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
-      <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-3 py-1.5 dark:border-slate-800 dark:bg-slate-900/70">
+      <div className="flex items-center justify-between border-b border-[#E3E8EE] bg-[#F6F9FC] px-3 py-1.5 dark:border-white/10 dark:bg-[#06182C]">
         <div className="flex items-center gap-1">
           {(
             [
@@ -213,8 +203,8 @@ export function ASTView({ t, analysis }: ASTViewProps) {
               onClick={() => setMode(m)}
               className={`rounded px-2 py-0.5 text-xs font-medium transition ${
                 mode === m
-                  ? 'bg-indigo-600 text-white'
-                  : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800'
+                  ? 'bg-[#635BFF] text-white'
+                  : 'text-[#425466] hover:bg-[#E3E8EE]/60 dark:text-[#ADBDCC] dark:hover:bg-white/10'
               }`}
             >
               {label}
@@ -224,9 +214,9 @@ export function ASTView({ t, analysis }: ASTViewProps) {
         <button
           type="button"
           onClick={() => void handleCopy()}
-          className="inline-flex items-center gap-1 rounded border border-slate-300 px-2 py-0.5 text-[11px] font-medium text-slate-600 hover:bg-slate-200 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+          className="stripe-btn-secondary inline-flex items-center gap-1 rounded px-2 py-0.5 text-[11px] font-medium"
         >
-          {copied ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
+          {copied ? <Check className="h-3 w-3 text-[#0E9F6E]" /> : <Copy className="h-3 w-3" />}
           {copied ? t.copiedBtn : t.copyBtn}
         </button>
       </div>
@@ -234,12 +224,12 @@ export function ASTView({ t, analysis }: ASTViewProps) {
       <div className="flex-1 overflow-auto p-3">
         {mode === 'interactive' && <AstTreeNode data={analysis.ast} />}
         {mode === 'ascii' && (
-          <pre className="font-mono text-xs leading-relaxed text-slate-800 dark:text-slate-200">
+          <pre className="font-mono text-xs leading-relaxed text-[#0A2540] dark:text-[#E6EDF3]">
             {analysis.astTreeText}
           </pre>
         )}
         {mode === 'json' && (
-          <pre className="font-mono text-xs leading-relaxed text-slate-800 dark:text-slate-200">
+          <pre className="font-mono text-xs leading-relaxed text-[#0A2540] dark:text-[#E6EDF3]">
             {jsonText}
           </pre>
         )}
@@ -265,7 +255,7 @@ export function BytecodeView({ t, analysis, activeIP, onJumpToLine }: BytecodeVi
 
   if (!analysis?.ok || !bc?.compiled) {
     return (
-      <div className="flex h-full flex-col items-center justify-center p-6 text-center text-xs text-slate-500 dark:text-slate-400">
+      <div className="flex h-full flex-col items-center justify-center p-6 text-center text-xs text-[#697386] dark:text-[#7C93AB]">
         <p>{bc?.error || t.bytecodeUnavailable}</p>
       </div>
     )
@@ -279,15 +269,15 @@ export function BytecodeView({ t, analysis, activeIP, onJumpToLine }: BytecodeVi
 
   return (
     <div className="flex h-full flex-col overflow-hidden">
-      <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-3 py-1.5 dark:border-slate-800 dark:bg-slate-900/70">
+      <div className="flex items-center justify-between border-b border-[#E3E8EE] bg-[#F6F9FC] px-3 py-1.5 dark:border-white/10 dark:bg-[#06182C]">
         <div className="flex items-center gap-1">
           <button
             type="button"
             onClick={() => setShowRaw(false)}
             className={`rounded px-2 py-0.5 text-xs font-medium ${
               !showRaw
-                ? 'bg-indigo-600 text-white'
-                : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800'
+                ? 'bg-[#635BFF] text-white'
+                : 'text-[#425466] hover:bg-[#E3E8EE]/60 dark:text-[#ADBDCC] dark:hover:bg-white/10'
             }`}
           >
             {t.bytecodeDisassembly} ({instructions.length})
@@ -297,8 +287,8 @@ export function BytecodeView({ t, analysis, activeIP, onJumpToLine }: BytecodeVi
             onClick={() => setShowRaw(true)}
             className={`rounded px-2 py-0.5 text-xs font-medium ${
               showRaw
-                ? 'bg-indigo-600 text-white'
-                : 'text-slate-600 hover:bg-slate-200 dark:text-slate-400 dark:hover:bg-slate-800'
+                ? 'bg-[#635BFF] text-white'
+                : 'text-[#425466] hover:bg-[#E3E8EE]/60 dark:text-[#ADBDCC] dark:hover:bg-white/10'
             }`}
           >
             {t.bytecodeRaw}
@@ -307,15 +297,15 @@ export function BytecodeView({ t, analysis, activeIP, onJumpToLine }: BytecodeVi
         <button
           type="button"
           onClick={() => void handleCopy()}
-          className="inline-flex items-center gap-1 rounded border border-slate-300 px-2 py-0.5 text-[11px] font-medium text-slate-600 hover:bg-slate-200 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+          className="stripe-btn-secondary inline-flex items-center gap-1 rounded px-2 py-0.5 text-[11px] font-medium"
         >
-          {copied ? <Check className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
+          {copied ? <Check className="h-3 w-3 text-[#0E9F6E]" /> : <Copy className="h-3 w-3" />}
           {copied ? t.copiedBtn : t.copyBtn}
         </button>
       </div>
 
       {!bc.vmSupported && bc.vmNote && (
-        <div className="flex items-start gap-2 border-b border-amber-500/30 bg-amber-500/10 px-3 py-2 text-[11px] text-amber-800 dark:text-amber-300">
+        <div className="flex items-start gap-2 border-b border-[#E3E8EE] bg-[#FFFBEB] px-3 py-2 text-[11px] text-[#92400E] dark:border-white/10 dark:bg-[#D97706]/15 dark:text-[#FCD34D]">
           <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
           <div>
             <strong>{t.vmNotSupportedWarn}</strong> {bc.vmNote}
@@ -325,13 +315,13 @@ export function BytecodeView({ t, analysis, activeIP, onJumpToLine }: BytecodeVi
 
       <div className="flex-1 overflow-auto">
         {showRaw ? (
-          <pre className="p-3 font-mono text-xs leading-relaxed text-slate-800 dark:text-slate-200">
+          <pre className="p-3 font-mono text-xs leading-relaxed text-[#0A2540] dark:text-[#E6EDF3]">
             {bc.disassembly}
           </pre>
         ) : (
-          <div className="divide-y divide-slate-200 dark:divide-slate-800">
-            <table className="w-full text-left font-mono text-xs">
-              <thead className="sticky top-0 border-b border-slate-200 bg-slate-100 text-[11px] uppercase text-slate-500 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400">
+          <div className="divide-y divide-[#E3E8EE] dark:divide-white/10">
+            <table className="w-full text-left font-mono text-xs tabular-nums">
+              <thead className="sticky top-0 border-b border-[#E3E8EE] bg-[#F6F9FC] text-[10px] font-semibold uppercase tracking-wider text-[#697386] dark:border-white/10 dark:bg-[#06182C] dark:text-[#7C93AB]">
                 <tr>
                   <th className="w-16 px-3 py-1.5">IP</th>
                   <th className="w-14 px-3 py-1.5">Line</th>
@@ -339,7 +329,7 @@ export function BytecodeView({ t, analysis, activeIP, onJumpToLine }: BytecodeVi
                   <th className="px-3 py-1.5">Operand</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/70">
+              <tbody className="divide-y divide-[#E3E8EE] dark:divide-white/10">
                 {instructions.map((inst) => {
                   const isCurrent = activeIP === inst.offset
                   return (
@@ -348,18 +338,18 @@ export function BytecodeView({ t, analysis, activeIP, onJumpToLine }: BytecodeVi
                       onClick={() => inst.line > 0 && onJumpToLine(inst.line)}
                       className={`cursor-pointer ${
                         isCurrent
-                          ? 'bg-amber-500/20 font-bold text-amber-900 dark:text-amber-200'
-                          : 'hover:bg-slate-50 dark:hover:bg-slate-800/40'
+                          ? 'bg-[#635BFF]/12 font-semibold text-[#635BFF] dark:bg-[#635BFF]/25 dark:text-[#80E9FF]'
+                          : 'hover:bg-[#F6F9FC] dark:hover:bg-white/5'
                       }`}
                     >
-                      <td className="px-3 py-1 text-slate-400">
+                      <td className="px-3 py-1 text-[#697386] dark:text-[#7C93AB]">
                         {String(inst.offset).padStart(4, '0')}
                       </td>
-                      <td className="px-3 py-1 text-slate-500">{inst.line || '—'}</td>
-                      <td className="px-3 py-1 font-semibold text-pink-600 dark:text-pink-400">
+                      <td className="px-3 py-1 text-[#697386] dark:text-[#7C93AB]">{inst.line || '—'}</td>
+                      <td className="px-3 py-1 font-semibold text-[#0A2540] dark:text-white">
                         {inst.op}
                       </td>
-                      <td className="px-3 py-1 text-cyan-700 dark:text-cyan-300">
+                      <td className="px-3 py-1 text-[#425466] dark:text-[#ADBDCC]">
                         {inst.detail || '—'}
                       </td>
                     </tr>
@@ -368,38 +358,37 @@ export function BytecodeView({ t, analysis, activeIP, onJumpToLine }: BytecodeVi
               </tbody>
             </table>
 
-            {/* Constants & Names */}
             <div className="grid grid-cols-1 gap-3 p-3 sm:grid-cols-2">
-              <div className="rounded border border-slate-200 p-2 dark:border-slate-800">
-                <div className="mb-1.5 text-[11px] font-semibold uppercase text-slate-500 dark:text-slate-400">
+              <div className="rounded border border-[#E3E8EE] p-2.5 dark:border-white/10">
+                <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#697386] dark:text-[#7C93AB]">
                   {t.bytecodeConstants} ({constants.length})
                 </div>
-                <div className="space-y-1 font-mono text-xs">
+                <div className="space-y-1 font-mono text-xs tabular-nums">
                   {constants.length === 0 ? (
-                    <span className="text-slate-400">—</span>
+                    <span className="text-[#8792A2]">—</span>
                   ) : (
                     constants.map((c, idx) => (
                       <div key={idx} className="flex gap-2">
-                        <span className="text-slate-400">#{idx}</span>
-                        <span className="text-amber-700 dark:text-amber-300">{c}</span>
+                        <span className="text-[#697386]">#{idx}</span>
+                        <span className="text-[#0A2540] dark:text-white">{c}</span>
                       </div>
                     ))
                   )}
                 </div>
               </div>
 
-              <div className="rounded border border-slate-200 p-2 dark:border-slate-800">
-                <div className="mb-1.5 text-[11px] font-semibold uppercase text-slate-500 dark:text-slate-400">
+              <div className="rounded border border-[#E3E8EE] p-2.5 dark:border-white/10">
+                <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#697386] dark:text-[#7C93AB]">
                   {t.bytecodeNames} ({names.length})
                 </div>
-                <div className="space-y-1 font-mono text-xs">
+                <div className="space-y-1 font-mono text-xs tabular-nums">
                   {names.length === 0 ? (
-                    <span className="text-slate-400">—</span>
+                    <span className="text-[#8792A2]">—</span>
                   ) : (
                     names.map((n, idx) => (
                       <div key={idx} className="flex gap-2">
-                        <span className="text-slate-400">#{idx}</span>
-                        <span className="text-emerald-700 dark:text-emerald-300">{n}</span>
+                        <span className="text-[#697386]">#{idx}</span>
+                        <span className="text-[#0E6245] dark:text-[#3ECF8E]">{n}</span>
                       </div>
                     ))
                   )}

@@ -3,6 +3,244 @@ import Layout from '../layouts/Layout.astro'
 import App from '../App'
 ---
 
-<Layout title="DAP Web IDE — Runner, Debugger & Analyzer">
-  <App client:only="react" />
+<Layout
+  title="DAP Web — Runner, Live Debugger & Analyzer untuk Pseudocode DAP"
+  description="Jalankan, debug langkah demi langkah, dan analisis kode pseudocode DAP langsung di browser tanpa instalasi. Dilengkapi terminal interaktif, visualisasi Heap & Pointer (Linked List/Stack), Token, AST, dan Bytecode VM."
+>
+  <!-- Interactive Workspace: Full viewport on desktop, natural unclipped stack on mobile -->
+  <div class="w-full lg:h-screen lg:overflow-hidden">
+    <App client:only="react" />
+    <noscript>
+      <div class="flex min-h-screen items-center justify-center bg-[#F6F9FC] p-6 text-center text-[#0A2540]">
+        <div class="max-w-md rounded-md border border-[#E3E8EE] bg-white p-6">
+          <h1 class="text-lg font-semibold">DAP Web</h1>
+          <p class="mt-2 text-sm text-[#425466]">
+            Aktifkan JavaScript dan WebAssembly pada browser Anda untuk menjalankan editor, debugger,
+            dan analyzer pseudocode DAP.
+          </p>
+        </div>
+      </div>
+    </noscript>
+  </div>
+
+  <!-- Editorial Documentation & SEO Section — Stripe architectural vertical hairline grid -->
+  <section
+    id="about-dap-web"
+    aria-label="Dokumentasi singkat dan spesifikasi DAP Web"
+    class="border-t border-[#E3E8EE] bg-white text-[#0A2540] dark:border-white/10 dark:bg-[#0A2540] dark:text-white"
+  >
+    <div class="stripe-guides mx-auto max-w-6xl border-x border-[#E3E8EE] px-6 py-16 sm:px-10 lg:py-24 dark:border-white/10">
+      <!-- Asymmetric Editorial Lead -->
+      <div class="grid gap-10 lg:grid-cols-12 lg:items-start">
+        <div class="lg:col-span-7">
+          <h1 class="text-3xl font-medium tracking-[-0.03em] text-[#0A2540] sm:text-4xl dark:text-white">
+            Jalankan, debug, dan bedah pseudocode DAP langsung di browser.
+          </h1>
+        </div>
+        <div class="lg:col-span-5">
+          <p class="text-[15px] leading-relaxed text-[#425466] dark:text-[#ADBDCC]">
+            <strong>DAP Web</strong> menjalankan engine asli dari{' '}
+            <a
+              href="https://github.com/rafiathallah3/dap"
+              target="_blank"
+              rel="noreferrer"
+              class="font-medium text-[#635BFF] hover:underline dark:text-[#80E9FF]"
+            >
+              rafiathallah3/dap
+            </a>{' '}
+            secara native di sisi klien tanpa server maupun instalasi CLI. Dirancang untuk mempermudah
+            praktikum algoritma, penelusuran loop langkah demi langkah, serta inspeksi pointer dan memori dinamis.
+          </p>
+        </div>
+      </div>
+
+      <!-- Stripe-style Left-Accented Architectural Feature Rows (NO rounded bento cards) -->
+      <div class="mt-16 grid gap-x-8 gap-y-10 border-t border-[#E3E8EE] pt-12 sm:grid-cols-2 lg:grid-cols-4 dark:border-white/10">
+        <article class="border-l border-[#635BFF] pl-4">
+          <h2 class="text-sm font-semibold tracking-[-0.01em] text-[#0A2540] dark:text-white">
+            Engine asli tanpa kompromi
+          </h2>
+          <p class="mt-2 text-[13px] leading-relaxed text-[#425466] dark:text-[#ADBDCC]">
+            Lexer, parser, tree-walking interpreter, dan bytecode VM dikompilasi langsung dari source Go DAP agar
+            hasil eksekusi identik dengan CLI.
+          </p>
+        </article>
+
+        <article class="border-l border-[#635BFF] pl-4">
+          <h2 class="text-sm font-semibold tracking-[-0.01em] text-[#0A2540] dark:text-white">
+            Step debugger per iterasi
+          </h2>
+          <p class="mt-2 text-[13px] leading-relaxed text-[#425466] dark:text-[#ADBDCC]">
+            Pasang breakpoint di gutter, telusuri <code>for</code>/<code>while</code>/<code>repeat</code> tiap
+            iterasi, periksa Call Stack, dan pantau perubahan variabel secara langsung.
+          </p>
+        </article>
+
+        <article class="border-l border-[#635BFF] pl-4">
+          <h2 class="text-sm font-semibold tracking-[-0.01em] text-[#0A2540] dark:text-white">
+            Inspeksi Heap &amp; Pointer
+          </h2>
+          <p class="mt-2 text-[13px] leading-relaxed text-[#425466] dark:text-[#ADBDCC]">
+            Lihat alamat <code>0x1000</code>, status <code>ALLOCATED</code> dan <code>FREED</code>, serta tautan
+            field struct saat menjalankan Singly/Doubly Linked List atau Stack.
+          </p>
+        </article>
+
+        <article class="border-l border-[#635BFF] pl-4">
+          <h2 class="text-sm font-semibold tracking-[-0.01em] text-[#0A2540] dark:text-white">
+            Tokens, AST &amp; Bytecode
+          </h2>
+          <p class="mt-2 text-[13px] leading-relaxed text-[#425466] dark:text-[#ADBDCC]">
+            Telusuri token dengan navigasi klik-ke-baris, baca AST dalam bentuk tree interaktif, ASCII, atau JSON,
+            dan ikuti operand stack pada mode Bytecode VM.
+          </p>
+        </article>
+      </div>
+
+      <!-- Technical Syntax Reference Table -->
+      <div class="mt-20 grid gap-8 border-t border-[#E3E8EE] pt-12 lg:grid-cols-12 dark:border-white/10">
+        <div class="lg:col-span-4">
+          <h2 class="text-xl font-medium tracking-[-0.02em] text-[#0A2540] dark:text-white">
+            Referensi cepat sintaks DAP
+          </h2>
+          <p class="mt-2 text-[13px] leading-relaxed text-[#425466] dark:text-[#ADBDCC]">
+            Editor menyediakan autocomplete kontekstual dan snippet (<code>Ctrl + Space</code>), multi-tab file,
+            serta penyimpanan otomatis di <code>localStorage</code>.
+          </p>
+        </div>
+
+        <div class="overflow-x-auto lg:col-span-8">
+          <table class="w-full border-collapse text-left text-[13px]">
+            <thead>
+              <tr class="border-b border-[#E3E8EE] text-[11px] font-semibold uppercase tracking-wider text-[#697386] dark:border-white/10 dark:text-[#7C93AB]">
+                <th class="py-2.5 pr-4">Struktur</th>
+                <th class="py-2.5">Sintaks</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#E3E8EE] dark:divide-white/10">
+              <tr>
+                <td class="py-3 pr-4 font-medium text-[#0A2540] dark:text-white">Kerangka Program</td>
+                <td class="py-3 font-mono text-xs text-[#425466] dark:text-[#ADBDCC]">
+                  program Nama ... dictionary/kamus ... algorithm/algoritma ... endprogram
+                </td>
+              </tr>
+              <tr>
+                <td class="py-3 pr-4 font-medium text-[#0A2540] dark:text-white">Input &amp; Output</td>
+                <td class="py-3 font-mono text-xs text-[#425466] dark:text-[#ADBDCC]">
+                  read x, input(x), inputBaris(nama), print x, output(x), write x
+                </td>
+              </tr>
+              <tr>
+                <td class="py-3 pr-4 font-medium text-[#0A2540] dark:text-white">Percabangan</td>
+                <td class="py-3 font-mono text-xs text-[#425466] dark:text-[#ADBDCC]">
+                  if ... then ... elif ... else ... endif &nbsp;|&nbsp; depend on ... default : ... enddependon
+                </td>
+              </tr>
+              <tr>
+                <td class="py-3 pr-4 font-medium text-[#0A2540] dark:text-white">Perulangan</td>
+                <td class="py-3 font-mono text-xs text-[#425466] dark:text-[#ADBDCC]">
+                  for i = 1 to N do ... endfor &nbsp;|&nbsp; while ... do ... endwhile &nbsp;|&nbsp; repeat ... until
+                </td>
+              </tr>
+              <tr>
+                <td class="py-3 pr-4 font-medium text-[#0A2540] dark:text-white">Pointer &amp; Heap</td>
+                <td class="py-3 font-mono text-xs text-[#425466] dark:text-[#ADBDCC]">
+                  pointer to ElmList, allocate(P), P-&gt;info &lt;- 10, deallocate(P), nil
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Hairline Editorial FAQ -->
+      <div class="mt-20 grid gap-8 border-t border-[#E3E8EE] pt-12 lg:grid-cols-12 dark:border-white/10">
+        <div class="lg:col-span-4">
+          <h2 class="text-xl font-medium tracking-[-0.02em] text-[#0A2540] dark:text-white">
+            Pertanyaan umum
+          </h2>
+        </div>
+        <div class="divide-y divide-[#E3E8EE] border-y border-[#E3E8EE] lg:col-span-8 dark:divide-white/10 dark:border-white/10">
+          <details class="group py-4">
+            <summary class="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-[#0A2540] dark:text-white">
+              <span>Apakah perlu instalasi CLI atau Docker?</span>
+              <span class="font-mono text-[#697386] transition group-open:rotate-45">+</span>
+            </summary>
+            <p class="mt-2.5 text-[13px] leading-relaxed text-[#425466] dark:text-[#ADBDCC]">
+              Tidak. Engine DAP berjalan langsung di browser melalui Web Worker terisolasi tanpa memerlukan server
+              eksekusi, Docker, maupun Podman.
+            </p>
+          </details>
+          <details class="group py-4">
+            <summary class="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-[#0A2540] dark:text-white">
+              <span>Apakah file tetap tersimpan jika browser ditutup?</span>
+              <span class="font-mono text-[#697386] transition group-open:rotate-45">+</span>
+            </summary>
+            <p class="mt-2.5 text-[13px] leading-relaxed text-[#425466] dark:text-[#ADBDCC]">
+              Ya. Semua tab file, nama file, isi kode, breakpoint, dan input otomatis disimpan ke
+              <code>localStorage</code> browser dan dapat diekspor sebagai file <code>.dap</code> kapan saja.
+            </p>
+          </details>
+          <details class="group py-4">
+            <summary class="flex cursor-pointer list-none items-center justify-between text-sm font-medium text-[#0A2540] dark:text-white">
+              <span>Di mana kode sumber dan dokumentasi lengkapnya?</span>
+              <span class="font-mono text-[#697386] transition group-open:rotate-45">+</span>
+            </summary>
+            <p class="mt-2.5 text-[13px] leading-relaxed text-[#425466] dark:text-[#ADBDCC]">
+              Antarmuka web berada di{' '}
+              <a
+                href="https://github.com/mee-i/dap-web"
+                target="_blank"
+                rel="noreferrer"
+                class="font-medium text-[#635BFF] hover:underline dark:text-[#80E9FF]"
+              >
+                github.com/mee-i/dap-web
+              </a>
+              , engine bahasa dari{' '}
+              <a
+                href="https://github.com/rafiathallah3/dap"
+                target="_blank"
+                rel="noreferrer"
+                class="font-medium text-[#635BFF] hover:underline dark:text-[#80E9FF]"
+              >
+                github.com/rafiathallah3/dap
+              </a>
+              , dan dokumentasi resmi di{' '}
+              <a
+                href="https://rafiathallah3.github.io/dap/"
+                target="_blank"
+                rel="noreferrer"
+                class="font-medium text-[#635BFF] hover:underline dark:text-[#80E9FF]"
+              >
+                rafiathallah3.github.io/dap
+              </a>
+              .
+            </p>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stripe Deep Navy Bottom Band -->
+  <div class="border-t border-white/10 bg-[#0A2540] px-6 py-8 text-xs text-[#ADBDCC]">
+    <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 sm:px-4">
+      <div class="flex items-center gap-3">
+        <span class="font-mono text-sm font-semibold tracking-tight text-white">dap</span>
+        <span class="text-white/25">/</span>
+        <span>Web environment untuk bahasa pseudocode DAP</span>
+      </div>
+      <div class="flex items-center gap-5">
+        <a href="https://github.com/mee-i/dap-web" target="_blank" rel="noreferrer" class="hover:text-white">
+          mee-i/dap-web
+        </a>
+        <a href="https://github.com/rafiathallah3/dap" target="_blank" rel="noreferrer" class="hover:text-white">
+          rafiathallah3/dap
+        </a>
+        <a href="https://rafiathallah3.github.io/dap/" target="_blank" rel="noreferrer" class="hover:text-white">
+          Dokumentasi
+        </a>
+      </div>
+    </div>
+  </div>
 </Layout>

@@ -15,8 +15,15 @@ import {
 } from '@codemirror/view'
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands'
 import { syntaxHighlighting, HighlightStyle, indentOnInput, bracketMatching } from '@codemirror/language'
+import {
+  autocompletion,
+  closeBrackets,
+  closeBracketsKeymap,
+  completionKeymap,
+} from '@codemirror/autocomplete'
 import { tags } from '@lezer/highlight'
 import { dapLanguage } from './dapLanguage'
+import { dapCompletionSource } from './dapAutocomplete'
 import type { DiagnosticDTO } from '../worker/types'
 
 export interface DapEditorHandle {
@@ -120,61 +127,90 @@ const errorLinesField = StateField.define<DecorationSet>({
 })
 
 const darkHighlight = HighlightStyle.define([
-  { tag: tags.keyword, color: '#c084fc', fontWeight: '600' },
-  { tag: tags.modifier, color: '#818cf8', fontWeight: '500' },
-  { tag: tags.typeName, color: '#38bdf8', fontWeight: '500' },
-  { tag: tags.standard(tags.name), color: '#34d399' },
-  { tag: tags.atom, color: '#fb923c', fontWeight: '600' },
-  { tag: tags.string, color: '#a3e635' },
-  { tag: tags.number, color: '#fbbf24' },
-  { tag: tags.comment, color: '#64748b', fontStyle: 'italic' },
-  { tag: tags.operator, color: '#f472b6' },
-  { tag: tags.variableName, color: '#e2e8f0' },
-  { tag: tags.punctuation, color: '#94a3b8' },
+  { tag: tags.keyword, color: '#a9a4ff', fontWeight: '600' },
+  { tag: tags.modifier, color: '#80e9ff', fontWeight: '500' },
+  { tag: tags.typeName, color: '#80e9ff', fontWeight: '500' },
+  { tag: tags.standard(tags.name), color: '#3ecf8e' },
+  { tag: tags.atom, color: '#ffcb6b', fontWeight: '600' },
+  { tag: tags.string, color: '#8ce99a' },
+  { tag: tags.number, color: '#ffcb6b' },
+  { tag: tags.comment, color: '#6c849c', fontStyle: 'italic' },
+  { tag: tags.operator, color: '#ff80b5' },
+  { tag: tags.variableName, color: '#f6f9fc' },
+  { tag: tags.punctuation, color: '#adbdcc' },
 ])
 
 const lightHighlight = HighlightStyle.define([
-  { tag: tags.keyword, color: '#7c3aed', fontWeight: '600' },
-  { tag: tags.modifier, color: '#4f46e5', fontWeight: '500' },
-  { tag: tags.typeName, color: '#0284c7', fontWeight: '500' },
-  { tag: tags.standard(tags.name), color: '#059669' },
-  { tag: tags.atom, color: '#ea580c', fontWeight: '600' },
-  { tag: tags.string, color: '#15803d' },
-  { tag: tags.number, color: '#b45309' },
-  { tag: tags.comment, color: '#64748b', fontStyle: 'italic' },
-  { tag: tags.operator, color: '#db2777' },
-  { tag: tags.variableName, color: '#0f172a' },
-  { tag: tags.punctuation, color: '#475569' },
+  { tag: tags.keyword, color: '#635bff', fontWeight: '600' },
+  { tag: tags.modifier, color: '#0073e6', fontWeight: '500' },
+  { tag: tags.typeName, color: '#0073e6', fontWeight: '500' },
+  { tag: tags.standard(tags.name), color: '#0e6245' },
+  { tag: tags.atom, color: '#b45309', fontWeight: '600' },
+  { tag: tags.string, color: '#0e6245' },
+  { tag: tags.number, color: '#9c36b5' },
+  { tag: tags.comment, color: '#8792a2', fontStyle: 'italic' },
+  { tag: tags.operator, color: '#c21437' },
+  { tag: tags.variableName, color: '#0a2540' },
+  { tag: tags.punctuation, color: '#697386' },
 ])
 
 const darkThemeExt = EditorView.theme(
   {
     '&': {
-      backgroundColor: '#0b1120',
-      color: '#e2e8f0',
+      backgroundColor: '#06182c',
+      color: '#f6f9fc',
     },
     '.cm-content': {
-      caretColor: '#38bdf8',
+      caretColor: '#80e9ff',
       padding: '10px 0',
     },
     '.cm-cursor, .cm-dropCursor': {
-      borderLeftColor: '#38bdf8',
+      borderLeftColor: '#80e9ff',
       borderLeftWidth: '2px',
     },
     '.cm-gutters': {
-      backgroundColor: '#0f172a',
-      color: '#64748b',
-      borderRight: '1px solid #1e293b',
+      backgroundColor: '#0a2540',
+      color: '#6c849c',
+      borderRight: '1px solid rgba(255, 255, 255, 0.1)',
     },
     '.cm-activeLine': {
-      backgroundColor: 'rgba(30, 41, 59, 0.55)',
+      backgroundColor: 'rgba(255, 255, 255, 0.04)',
     },
     '.cm-activeLineGutter': {
-      backgroundColor: '#1e293b',
-      color: '#e2e8f0',
+      backgroundColor: '#0d2b4a',
+      color: '#ffffff',
     },
     '&.cm-focused .cm-selectionBackground, ::selection': {
-      backgroundColor: 'rgba(56, 189, 248, 0.25)',
+      backgroundColor: 'rgba(128, 233, 255, 0.2)',
+    },
+    '.cm-tooltip.cm-tooltip-autocomplete': {
+      backgroundColor: '#0a2540',
+      border: '1px solid rgba(255, 255, 255, 0.15)',
+      borderRadius: '6px',
+      boxShadow: '0 12px 24px -4px rgba(0, 0, 0, 0.45)',
+      overflow: 'hidden',
+    },
+    '.cm-tooltip-autocomplete > ul > li': {
+      padding: '4px 10px',
+      color: '#f6f9fc',
+    },
+    '.cm-tooltip-autocomplete > ul > li[aria-selected]': {
+      backgroundColor: '#635bff',
+      color: '#ffffff',
+    },
+    '.cm-completionDetail': {
+      color: '#adbdcc',
+      fontStyle: 'normal',
+      marginLeft: '8px',
+      fontSize: '11px',
+    },
+    '.cm-tooltip.cm-completionInfo': {
+      backgroundColor: '#0d2b4a',
+      border: '1px solid rgba(255, 255, 255, 0.15)',
+      borderRadius: '6px',
+      color: '#adbdcc',
+      fontSize: '12px',
+      padding: '6px 10px',
     },
   },
   { dark: true },
@@ -183,30 +219,62 @@ const darkThemeExt = EditorView.theme(
 const lightThemeExt = EditorView.theme({
   '&': {
     backgroundColor: '#ffffff',
-    color: '#0f172a',
+    color: '#0a2540',
   },
   '.cm-content': {
-    caretColor: '#2563eb',
+    caretColor: '#635bff',
     padding: '10px 0',
   },
   '.cm-cursor, .cm-dropCursor': {
-    borderLeftColor: '#2563eb',
+    borderLeftColor: '#635bff',
     borderLeftWidth: '2px',
   },
   '.cm-gutters': {
-    backgroundColor: '#f8fafc',
-    color: '#94a3b8',
-    borderRight: '1px solid #e2e8f0',
+    backgroundColor: '#f6f9fc',
+    color: '#8792a2',
+    borderRight: '1px solid #e3e8ee',
   },
   '.cm-activeLine': {
-    backgroundColor: 'rgba(226, 232, 240, 0.45)',
+    backgroundColor: 'rgba(246, 249, 252, 0.85)',
   },
   '.cm-activeLineGutter': {
-    backgroundColor: '#e2e8f0',
-    color: '#0f172a',
+    backgroundColor: '#edf2f7',
+    color: '#0a2540',
   },
   '&.cm-focused .cm-selectionBackground, ::selection': {
-    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+    backgroundColor: 'rgba(99, 91, 255, 0.16)',
+  },
+  '.cm-tooltip.cm-tooltip-autocomplete': {
+    backgroundColor: '#ffffff',
+    border: '1px solid #e3e8ee',
+    borderRadius: '6px',
+    boxShadow: '0 6px 12px -2px rgba(50, 50, 93, 0.14), 0 3px 7px -3px rgba(0, 0, 0, 0.12)',
+    overflow: 'hidden',
+  },
+  '.cm-tooltip-autocomplete > ul > li': {
+    padding: '4px 10px',
+    color: '#0a2540',
+  },
+  '.cm-tooltip-autocomplete > ul > li[aria-selected]': {
+    backgroundColor: '#635bff',
+    color: '#ffffff',
+  },
+  '.cm-completionDetail': {
+    color: '#697386',
+    fontStyle: 'normal',
+    marginLeft: '8px',
+    fontSize: '11px',
+  },
+  '.cm-tooltip-autocomplete > ul > li[aria-selected] .cm-completionDetail': {
+    color: 'rgba(255, 255, 255, 0.8)',
+  },
+  '.cm-tooltip.cm-completionInfo': {
+    backgroundColor: '#f6f9fc',
+    border: '1px solid #e3e8ee',
+    borderRadius: '6px',
+    color: '#425466',
+    fontSize: '12px',
+    padding: '6px 10px',
   },
 })
 
@@ -292,8 +360,21 @@ export const DapEditor = forwardRef<DapEditorHandle, DapEditorProps>(function Da
         history(),
         indentOnInput(),
         bracketMatching(),
+        closeBrackets(),
         dapLanguage,
-        keymap.of([indentWithTab, ...defaultKeymap, ...historyKeymap]),
+        autocompletion({
+          override: [dapCompletionSource],
+          activateOnTyping: true,
+          maxRenderedOptions: 14,
+          icons: true,
+        }),
+        keymap.of([
+          ...completionKeymap,
+          ...closeBracketsKeymap,
+          indentWithTab,
+          ...defaultKeymap,
+          ...historyKeymap,
+        ]),
         themeCompartmentRef.current.of(theme === 'dark' ? darkThemeExt : lightThemeExt),
         highlightCompartmentRef.current.of(
           syntaxHighlighting(theme === 'dark' ? darkHighlight : lightHighlight),

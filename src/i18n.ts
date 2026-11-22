@@ -29,6 +29,11 @@ export const translations = {
     themeToggle: 'Ganti Tema',
     langToggle: 'Bahasa',
     editorTitle: 'Editor DAP',
+    newTab: 'Tab File Baru',
+    renameFile: 'Ganti Nama File',
+    closeTab: 'Tutup Tab',
+    renameHint: 'Double-klik tab atau klik ikon pensil untuk ganti nama',
+    savedLocally: 'Tersimpan di browser',
     breakpointsCount: (n: number) => `${n} breakpoint`,
     breakpointHint: 'Klik nomor baris untuk pasang/lepas breakpoint',
     lineCol: (ln: number, col: number) => `Baris ${ln}, Kolom ${col}`,
@@ -98,6 +103,7 @@ export const translations = {
     noDiagnostics: 'Tidak ada error sintaks.',
     pausedAtLine: (line: number, nodeType: string, step: number) =>
       `Berhenti di Baris ${line} (${nodeType}) • Langkah #${step}`,
+    suggestShortcut: 'Saran Kode',
     footerCredits: 'Dibuat untuk mempermudah eksekusi, debugging & analisis DAP berbasis',
   },
   en: {
@@ -128,6 +134,11 @@ export const translations = {
     themeToggle: 'Toggle Theme',
     langToggle: 'Language',
     editorTitle: 'DAP Editor',
+    newTab: 'New File Tab',
+    renameFile: 'Rename File',
+    closeTab: 'Close Tab',
+    renameHint: 'Double-click tab or click pencil icon to rename',
+    savedLocally: 'Saved in browser',
     breakpointsCount: (n: number) => `${n} breakpoint${n === 1 ? '' : 's'}`,
     breakpointHint: 'Click line numbers to toggle breakpoints',
     lineCol: (ln: number, col: number) => `Line ${ln}, Col ${col}`,
@@ -197,6 +208,7 @@ export const translations = {
     noDiagnostics: 'No syntax errors.',
     pausedAtLine: (line: number, nodeType: string, step: number) =>
       `Paused at Line ${line} (${nodeType}) • Step #${step}`,
+    suggestShortcut: 'Code Suggestions',
     footerCredits: 'Built to simplify running, debugging & analyzing DAP powered by',
   },
 } as const

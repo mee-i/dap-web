@@ -12,16 +12,9 @@ import {
   Download,
   Sun,
   Moon,
-  Languages,
-  Cpu,
-  Terminal,
-  ExternalLink,
-  Loader2,
-  CheckCircle2,
-  AlertTriangle,
-  BookOpen,
   ChevronDown,
   FilePlus2,
+  ArrowUpRight,
 } from 'lucide-react'
 import type { Language, TranslationDict } from '../i18n'
 import type { DebugCommand, ExecutionEngine, SessionStatus } from '../worker/types'
@@ -111,69 +104,56 @@ export function Toolbar({
   }
 
   return (
-    <header className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 bg-white px-3 py-2 dark:border-slate-800 dark:bg-slate-900">
-      {/* Brand & Upstream Attribution */}
-      <div className="flex items-center gap-2.5">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-cyan-500 text-white shadow-sm">
-          <Terminal className="h-4 w-4" />
+    <header className="flex flex-wrap items-center justify-between gap-2 border-b border-[#E3E8EE] bg-white px-3 py-2 dark:border-white/10 dark:bg-[#0A2540]">
+      {/* Typographic Wordmark & Repo Link */}
+      <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-[15px] font-semibold tracking-[-0.04em] text-[#0A2540] dark:text-white">
+            dap
+          </span>
+          <span className="text-[#CBD5E1] dark:text-white/20">/</span>
+          <a
+            href="https://github.com/mee-i/dap-web"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-0.5 text-xs font-medium text-[#425466] transition hover:text-[#635BFF] dark:text-[#ADBDCC] dark:hover:text-[#80E9FF]"
+            title="https://github.com/mee-i/dap-web"
+          >
+            <span>mee-i/dap-web</span>
+            <ArrowUpRight className="h-3 w-3 opacity-70" />
+          </a>
         </div>
-        <div className="leading-tight">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-bold tracking-tight text-slate-900 dark:text-white">
-              {t.appTitle}
-            </span>
-            <a
-              href="https://github.com/mee-i/dap-web"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-700 transition hover:border-indigo-400 hover:text-indigo-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:border-indigo-500 dark:hover:text-indigo-300"
-              title="https://github.com/mee-i/dap-web"
-            >
-              <ExternalLink className="h-3 w-3" />
-              mee-i/dap-web
-            </a>
-          </div>
-          <div className="flex items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400">
-            <span>{t.appSubtitle}</span>
-            <span className="text-slate-300 dark:text-slate-700">•</span>
-            {wasmError ? (
-              <span className="inline-flex items-center gap-1 text-rose-500">
-                <AlertTriangle className="h-3 w-3" />
-                {t.engineError}
-              </span>
-            ) : wasmReady ? (
-              <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
-                <CheckCircle2 className="h-3 w-3" />
-                {t.engineReady} ({wasmVersion})
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-1 text-amber-500">
-                <Loader2 className="h-3 w-3 animate-spin" />
-                {t.loadingEngine}
-              </span>
-            )}
-          </div>
+
+        {/* Minimal Engine Readiness Indicator */}
+        <div className="hidden items-center gap-1.5 border-l border-[#E3E8EE] pl-3 text-[11px] text-[#697386] sm:flex dark:border-white/10 dark:text-[#7C93AB]">
+          <span
+            className={`h-1.5 w-1.5 rounded-full ${
+              wasmError ? 'bg-[#DF1B41]' : wasmReady ? 'bg-[#0E9F6E]' : 'animate-pulse bg-[#D97706]'
+            }`}
+          />
+          <span className="font-mono tabular-nums">
+            {wasmError ? t.engineError : wasmReady ? wasmVersion || 'v1.0.2' : t.loadingEngine}
+          </span>
         </div>
       </div>
 
-      {/* Execution & Debug Controls */}
+      {/* Primary Execution & Debug Controls */}
       <div className="flex flex-wrap items-center gap-1.5">
-        {/* "Gunakan Contoh" button + popover dropdown */}
+        {/* Examples Dropdown */}
         <div ref={exampleMenuRef} className="relative">
           <button
             type="button"
             onClick={() => setExamplesOpen((v) => !v)}
-            className="inline-flex h-8 items-center gap-1.5 rounded-md border border-indigo-300 bg-indigo-50 px-2.5 text-xs font-semibold text-indigo-700 transition hover:bg-indigo-100 dark:border-indigo-500/40 dark:bg-indigo-500/15 dark:text-indigo-300 dark:hover:bg-indigo-500/25"
+            className="stripe-btn-secondary inline-flex h-8 items-center gap-1.5 rounded px-2.5 text-xs font-medium transition"
           >
-            <BookOpen className="h-3.5 w-3.5" />
             <span>{t.useExampleBtn}</span>
-            <ChevronDown className="h-3 w-3 opacity-80" />
+            <ChevronDown className="h-3 w-3 opacity-60" />
           </button>
 
           {examplesOpen && (
-            <div className="absolute left-0 z-50 mt-1.5 w-80 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-slate-900">
-              <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-3 py-2 dark:border-slate-800 dark:bg-slate-950/60">
-                <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+            <div className="stripe-card-shadow absolute left-0 z-50 mt-1.5 w-80 overflow-hidden rounded-md border border-[#E3E8EE] bg-white dark:border-white/15 dark:bg-[#0A2540]">
+              <div className="flex items-center justify-between border-b border-[#E3E8EE] bg-[#F6F9FC] px-3 py-2 dark:border-white/10 dark:bg-[#06182C]">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-[#697386] dark:text-[#7C93AB]">
                   {t.examples}
                 </span>
                 <button
@@ -182,13 +162,13 @@ export function Toolbar({
                     onNewBlankFile()
                     setExamplesOpen(false)
                   }}
-                  className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] font-medium text-slate-600 hover:bg-slate-200 dark:text-slate-300 dark:hover:bg-slate-800"
+                  className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-[11px] font-medium text-[#425466] hover:bg-[#E3E8EE]/60 dark:text-[#ADBDCC] dark:hover:bg-white/10"
                 >
                   <FilePlus2 className="h-3 w-3" />
                   {t.newBlankFile}
                 </button>
               </div>
-              <div className="max-h-80 divide-y divide-slate-100 overflow-auto dark:divide-slate-800">
+              <div className="max-h-80 divide-y divide-[#E3E8EE] overflow-auto dark:divide-white/10">
                 {DAP_EXAMPLES.map((ex) => {
                   const isSelected = selectedExampleId === ex.id
                   return (
@@ -199,21 +179,21 @@ export function Toolbar({
                         onSelectExample(ex.id)
                         setExamplesOpen(false)
                       }}
-                      className={`block w-full px-3 py-2 text-left transition ${
+                      className={`block w-full px-3 py-2.5 text-left transition ${
                         isSelected
-                          ? 'bg-indigo-500/10 dark:bg-indigo-500/15'
-                          : 'hover:bg-slate-50 dark:hover:bg-slate-800/70'
+                          ? 'bg-[#635BFF]/8 dark:bg-[#635BFF]/20'
+                          : 'hover:bg-[#F6F9FC] dark:hover:bg-white/5'
                       }`}
                     >
                       <div className="flex items-center justify-between gap-2">
-                        <span className="text-xs font-semibold text-slate-800 dark:text-slate-100">
+                        <span className="text-xs font-semibold text-[#0A2540] dark:text-white">
                           {lang === 'id' ? ex.titleId : ex.titleEn}
                         </span>
-                        <span className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+                        <span className="font-mono text-[10px] text-[#697386] dark:text-[#7C93AB]">
                           {ex.fileName}
                         </span>
                       </div>
-                      <p className="mt-0.5 text-[11px] leading-snug text-slate-500 dark:text-slate-400">
+                      <p className="mt-0.5 text-[11px] leading-snug text-[#425466] dark:text-[#ADBDCC]">
                         {lang === 'id' ? ex.descriptionId : ex.descriptionEn}
                       </p>
                     </button>
@@ -224,117 +204,108 @@ export function Toolbar({
           )}
         </div>
 
-        {/* Engine selector */}
-        <div className="flex h-8 items-center rounded-md border border-slate-300 bg-slate-50 px-1.5 dark:border-slate-700 dark:bg-slate-800">
-          <Cpu className="mr-1 h-3.5 w-3.5 text-slate-500 dark:text-slate-400" />
-          <select
-            aria-label={t.engine}
-            value={engine}
-            onChange={(e) => onEngineChange(e.target.value as ExecutionEngine)}
-            disabled={isBusy}
-            className="bg-transparent text-xs font-medium text-slate-800 outline-none disabled:opacity-60 dark:text-slate-200"
-          >
-            <option value="interpreter" className="dark:bg-slate-900">
-              {t.engineInterpreter}
-            </option>
-            <option value="vm" className="dark:bg-slate-900">
-              {t.engineVM}
-            </option>
-          </select>
-        </div>
+        {/* Engine Selector */}
+        <select
+          aria-label={t.engine}
+          value={engine}
+          onChange={(e) => onEngineChange(e.target.value as ExecutionEngine)}
+          disabled={isBusy}
+          className="stripe-btn-secondary h-8 rounded px-2 text-xs font-medium outline-none disabled:opacity-50"
+        >
+          <option value="interpreter" className="dark:bg-[#0A2540]">
+            {t.engineInterpreter}
+          </option>
+          <option value="vm" className="dark:bg-[#0A2540]">
+            {t.engineVM}
+          </option>
+        </select>
 
-        {/* Run / Debug buttons */}
+        {/* Primary Action: Stripe Blurple #635BFF */}
         <button
           type="button"
           onClick={onRun}
           disabled={!wasmReady || !hasCode}
-          className="inline-flex h-8 items-center gap-1.5 rounded-md bg-emerald-600 px-3 text-xs font-semibold text-white shadow-sm transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex h-8 items-center gap-1.5 rounded bg-[#635BFF] px-3 text-xs font-medium text-white shadow-xs transition hover:bg-[#5349F0] disabled:cursor-not-allowed disabled:opacity-45"
         >
-          <Play className="h-3.5 w-3.5 fill-current" />
-          {t.run}
+          <Play className="h-3 w-3 fill-current" />
+          <span>{t.run}</span>
         </button>
 
+        {/* Secondary Action: Debug */}
         <button
           type="button"
           onClick={onDebug}
           disabled={!wasmReady || !hasCode}
-          className="inline-flex h-8 items-center gap-1.5 rounded-md bg-indigo-600 px-3 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+          className="stripe-btn-secondary inline-flex h-8 items-center gap-1.5 rounded px-2.5 text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-45"
         >
-          <Bug className="h-3.5 w-3.5" />
-          {t.debug}
+          <Bug className="h-3.5 w-3.5 text-[#635BFF] dark:text-[#80E9FF]" />
+          <span>{t.debug}</span>
         </button>
 
-        {/* Step Controls when running/paused */}
-        {isBusy && (
-          <div className="flex items-center gap-1 rounded-md border border-slate-200 bg-slate-100 p-0.5 dark:border-slate-700 dark:bg-slate-800/80">
+        {/* Always-mounted Segmented Step Controls (zero layout shift) */}
+        <div className="flex h-8 items-center divide-x divide-[#E3E8EE] overflow-hidden rounded border border-[#E3E8EE] bg-[#F6F9FC] dark:divide-white/10 dark:border-white/15 dark:bg-[#06182C]">
+          <button
+            type="button"
+            onClick={() => onDebugCommand(isPaused ? 'continue' : 'pause')}
+            disabled={!isBusy}
+            title={isPaused ? t.continue : t.pause}
+            aria-label={isPaused ? t.continue : t.pause}
+            className="inline-flex h-full w-7 items-center justify-center text-[#0A2540] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-30 dark:text-white dark:hover:bg-white/10"
+          >
             {isPaused ? (
-              <button
-                type="button"
-                onClick={() => onDebugCommand('continue')}
-                title={t.continue}
-                className="inline-flex h-7 items-center gap-1 rounded px-2 text-xs font-medium text-emerald-700 hover:bg-emerald-500/15 dark:text-emerald-400"
-              >
-                <FastForward className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">{t.continue}</span>
-              </button>
+              <FastForward className="h-3.5 w-3.5 text-[#635BFF] dark:text-[#80E9FF]" />
             ) : (
-              <button
-                type="button"
-                onClick={() => onDebugCommand('pause')}
-                title={t.pause}
-                className="inline-flex h-7 items-center gap-1 rounded px-2 text-xs font-medium text-amber-700 hover:bg-amber-500/15 dark:text-amber-400"
-              >
-                <Pause className="h-3.5 w-3.5" />
-              </button>
+              <Pause className="h-3.5 w-3.5" />
             )}
+          </button>
 
-            <button
-              type="button"
-              onClick={() => onDebugCommand('step_over')}
-              disabled={!isPaused}
-              title={t.stepOver}
-              className="inline-flex h-7 items-center gap-1 rounded px-2 text-xs font-medium text-sky-700 hover:bg-sky-500/15 disabled:opacity-40 dark:text-sky-400"
-            >
-              <StepForward className="h-3.5 w-3.5" />
-              <span className="hidden lg:inline">{t.stepOver}</span>
-            </button>
+          <button
+            type="button"
+            onClick={() => onDebugCommand('step_over')}
+            disabled={!isPaused}
+            title={t.stepOver}
+            aria-label={t.stepOver}
+            className="inline-flex h-full w-7 items-center justify-center text-[#0A2540] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-30 dark:text-white dark:hover:bg-white/10"
+          >
+            <StepForward className="h-3.5 w-3.5" />
+          </button>
 
-            <button
-              type="button"
-              onClick={() => onDebugCommand('step_into')}
-              disabled={!isPaused}
-              title={t.stepInto}
-              className="inline-flex h-7 items-center gap-1 rounded px-2 text-xs font-medium text-sky-700 hover:bg-sky-500/15 disabled:opacity-40 dark:text-sky-400"
-            >
-              <ArrowDownToLine className="h-3.5 w-3.5" />
-              <span className="hidden lg:inline">{t.stepInto}</span>
-            </button>
+          <button
+            type="button"
+            onClick={() => onDebugCommand('step_into')}
+            disabled={!isPaused}
+            title={t.stepInto}
+            aria-label={t.stepInto}
+            className="inline-flex h-full w-7 items-center justify-center text-[#0A2540] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-30 dark:text-white dark:hover:bg-white/10"
+          >
+            <ArrowDownToLine className="h-3.5 w-3.5" />
+          </button>
 
-            <button
-              type="button"
-              onClick={() => onDebugCommand('step_out')}
-              disabled={!isPaused}
-              title={t.stepOut}
-              className="inline-flex h-7 items-center gap-1 rounded px-2 text-xs font-medium text-sky-700 hover:bg-sky-500/15 disabled:opacity-40 dark:text-sky-400"
-            >
-              <ArrowUpFromLine className="h-3.5 w-3.5" />
-              <span className="hidden xl:inline">{t.stepOut}</span>
-            </button>
+          <button
+            type="button"
+            onClick={() => onDebugCommand('step_out')}
+            disabled={!isPaused}
+            title={t.stepOut}
+            aria-label={t.stepOut}
+            className="inline-flex h-full w-7 items-center justify-center text-[#0A2540] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-30 dark:text-white dark:hover:bg-white/10"
+          >
+            <ArrowUpFromLine className="h-3.5 w-3.5" />
+          </button>
 
-            <button
-              type="button"
-              onClick={() => onDebugCommand('stop')}
-              title={t.stop}
-              className="inline-flex h-7 items-center gap-1 rounded px-2 text-xs font-medium text-rose-600 hover:bg-rose-500/15 dark:text-rose-400"
-            >
-              <Square className="h-3.5 w-3.5 fill-current" />
-              <span className="hidden sm:inline">{t.stop}</span>
-            </button>
-          </div>
-        )}
+          <button
+            type="button"
+            onClick={() => onDebugCommand('stop')}
+            disabled={!isBusy}
+            title={t.stop}
+            aria-label={t.stop}
+            className="inline-flex h-full w-7 items-center justify-center text-[#DF1B41] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-30 dark:hover:bg-white/10"
+          >
+            <Square className="h-3 w-3 fill-current" />
+          </button>
+        </div>
       </div>
 
-      {/* File I/O, Language & Theme */}
+      {/* Utility Controls: Import, Export, Language, Theme */}
       <div className="flex items-center gap-1">
         <input
           ref={fileInputRef}
@@ -347,40 +318,38 @@ export function Toolbar({
           type="button"
           onClick={() => fileInputRef.current?.click()}
           title={t.importFile}
-          className="inline-flex h-8 items-center gap-1 rounded-md border border-slate-200 px-2 text-xs font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+          className="stripe-btn-secondary inline-flex h-8 items-center gap-1 rounded px-2 text-xs font-medium transition"
         >
-          <Upload className="h-3.5 w-3.5" />
+          <Upload className="h-3.5 w-3.5 opacity-70" />
           <span className="hidden xl:inline">{t.importFile}</span>
         </button>
         <button
           type="button"
           onClick={onExportFile}
           title={t.exportFile}
-          className="inline-flex h-8 items-center gap-1 rounded-md border border-slate-200 px-2 text-xs font-medium text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+          className="stripe-btn-secondary inline-flex h-8 items-center gap-1 rounded px-2 text-xs font-medium transition"
         >
-          <Download className="h-3.5 w-3.5" />
+          <Download className="h-3.5 w-3.5 opacity-70" />
           <span className="hidden xl:inline">{t.exportFile}</span>
         </button>
 
-        {/* Language selector (ID / EN) */}
         <button
           type="button"
           onClick={onToggleLang}
           title={t.langToggle}
-          className="inline-flex h-8 items-center gap-1 rounded-md border border-slate-200 px-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+          className="stripe-btn-secondary inline-flex h-8 items-center rounded px-2 font-mono text-[11px] font-semibold transition"
         >
-          <Languages className="h-3.5 w-3.5 text-indigo-500" />
-          <span>{lang.toUpperCase()}</span>
+          {lang.toUpperCase()}
         </button>
 
-        {/* Theme toggle */}
         <button
           type="button"
           onClick={onToggleTheme}
           title={t.themeToggle}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+          aria-label={t.themeToggle}
+          className="stripe-btn-secondary inline-flex h-8 w-8 items-center justify-center rounded transition"
         >
-          {theme === 'dark' ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4 text-indigo-600" />}
+          {theme === 'dark' ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
         </button>
       </div>
     </header>

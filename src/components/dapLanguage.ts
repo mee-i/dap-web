@@ -25,6 +25,7 @@ const controlKeywords = new Set([
   'until',
   'depend',
   'on',
+  'default',
   'enddependon',
   'function',
   'endfunction',

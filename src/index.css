@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-sans);
+  }
+
+  code,
+  pre,
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+}
+
+/* CodeMirror custom debugger styles */
+.cm-editor {
+  height: 100%;
+  font-family: var(--font-mono) !important;
+  font-size: 13.5px;
+}
+
+.cm-scroller {
+  overflow: auto !important;
+}
+
+.cm-breakpoint-gutter {
+  width: 20px;
+  cursor: pointer;
+}
+
+.cm-breakpoint-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background-color: #ef4444;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.25);
+  margin-left: 4px;
+  vertical-align: middle;
+}
+
+.cm-active-debug-line {
+  background-color: rgba(250, 204, 21, 0.2) !important;
+  box-shadow: inset 3px 0 0 #eab308;
+}
+
+.dark .cm-active-debug-line {
+  background-color: rgba(250, 204, 21, 0.16) !important;
+  box-shadow: inset 3px 0 0 #facc15;
+}
+
+.cm-error-line {
+  background-color: rgba(239, 68, 68, 0.14) !important;
+  text-decoration: wavy underline #ef4444;
+}
+
+/* Custom thin scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.35);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.55);
+}

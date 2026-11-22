@@ -403,7 +403,15 @@ function DapIdeApp() {
   const allDiagnostics = useMemo(() => {
     const list = [...(analysis?.diagnostics ?? [])]
     if (runtimeError) {
-      list.push(runtimeError)
+      const isDuplicate = list.some(
+        (d) =>
+          d.line === runtimeError.line &&
+          d.col === runtimeError.col &&
+          d.message === runtimeError.message,
+      )
+      if (!isDuplicate) {
+        list.push(runtimeError)
+      }
     }
     return list
   }, [analysis?.diagnostics, runtimeError])

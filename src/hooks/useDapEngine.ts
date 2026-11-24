@@ -88,7 +88,7 @@ export function useDapEngine() {
       switch (msg.type) {
         case 'ready':
           setWasmReady(true)
-          setWasmVersion(msg.version || 'v1.0.2')
+          setWasmVersion(msg.version || 'v1.0.3')
           setWasmError(null)
           break
 

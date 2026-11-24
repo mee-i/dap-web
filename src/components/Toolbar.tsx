@@ -132,7 +132,7 @@ export function Toolbar({
             }`}
           />
           <span className="font-mono tabular-nums">
-            {wasmError ? t.engineError : wasmReady ? wasmVersion || 'v1.0.2' : t.loadingEngine}
+            {wasmError ? t.engineError : wasmReady ? wasmVersion || 'v1.0.3' : t.loadingEngine}
           </span>
         </div>
       </div>

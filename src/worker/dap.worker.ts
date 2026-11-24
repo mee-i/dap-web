@@ -27,7 +27,7 @@ function post(msg: WorkerOutboundMessage) {
 
 async function initWasm(baseUrl: string) {
   if (wasmLoaded) {
-    post({ type: 'ready', version: 'v1.0.2' })
+    post({ type: 'ready', version: 'v1.0.3' })
     return
   }
 
